@@ -1,0 +1,123 @@
+{
+  "n_match_team_rows": 760,
+  "n_matches": 380,
+  "n_teams": 20,
+  "outcome": {
+    "cv_accuracy_mean": 0.438,
+    "cv_accuracy_std": 0.042,
+    "cv_f1_weighted": 0.413,
+    "n_splits": 5,
+    "majority_baseline": 0.379,
+    "top_features": [
+      {
+        "feature": "avg_clustering",
+        "importance": 0.102
+      },
+      {
+        "feature": "attacking_flow_efficiency",
+        "importance": 0.099
+      },
+      {
+        "feature": "team_tempo",
+        "importance": 0.098
+      },
+      {
+        "feature": "low_latency_ratio",
+        "importance": 0.097
+      },
+      {
+        "feature": "top_betweenness_value",
+        "importance": 0.096
+      }
+    ],
+    "result_distribution": {
+      "L": 288,
+      "W": 288,
+      "D": 184
+    }
+  },
+  "clusters": {
+    "0": [
+      "Barcelona",
+      "Real Madrid"
+    ],
+    "1": [
+      "Athletic Club",
+      "Celta Vigo",
+      "Las Palmas",
+      "RC Deportivo La Coruña",
+      "Real Sociedad",
+      "Sevilla",
+      "Valencia"
+    ],
+    "2": [
+      "Eibar",
+      "Espanyol",
+      "Getafe",
+      "Granada",
+      "Levante UD",
+      "Málaga",
+      "Real Betis",
+      "Sporting Gijón",
+      "Villarreal"
+    ],
+    "3": [
+      "Atlético Madrid",
+      "Rayo Vallecano"
+    ]
+  },
+  "pressure": {
+    "free_completion": 0.819,
+    "pressed_completion": 0.735,
+    "drop_pp": 8.3
+  },
+  "resilience_top3_clasico": [
+    "Daniel Alves da Silva",
+    "Andrés Iniesta Luján",
+    "Sergio Busquets i Burgos"
+  ],
+  "flow_efficiency": {
+    "top3": [
+      [
+        "Málaga",
+        0.0617
+      ],
+      [
+        "Sevilla",
+        0.0577
+      ],
+      [
+        "Real Sociedad",
+        0.0577
+      ]
+    ],
+    "barcelona": 0.0407,
+    "atletico": 0.0446
+  },
+  "density_examples": {
+    "Barcelona": 0.549,
+    "Real Madrid": 0.514,
+    "Atlético Madrid": 0.428,
+    "Sevilla": 0.404
+  },
+  "shifts": {
+    "match": 265839,
+    "team": "Barcelona",
+    "detected": [
+      1021,
+      1081,
+      3301,
+      3781
+    ],
+    "events": [
+      1158,
+      1846,
+      2839,
+      3282,
+      3804,
+      4473
+    ],
+    "matched": 4,
+    "total": 4
+  }
+}

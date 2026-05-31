@@ -77,6 +77,18 @@ Run the test suite with `pytest`.
   ~44% cross-validated accuracy (33% baseline).
 - Detected tactical shifts line up with substitutions and goals (±3 min).
 
+## Paper
+
+A full write-up of the method and results is in
+**[`paper/Tactical_Topology.pdf`](paper/Tactical_Topology.pdf)**. Rebuild it from
+the current data and figures with:
+
+```bash
+python paper/make_diagrams.py      # architecture + concept diagrams
+python paper/compute_results.py    # exact numbers -> paper/results.json
+python paper/build_paper.py        # -> paper/Tactical_Topology.pdf
+```
+
 ## Blog post
 
 _Write-up to be linked here after publication._
