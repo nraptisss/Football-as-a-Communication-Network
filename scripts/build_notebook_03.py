@@ -88,16 +88,16 @@ def build():
             "eff.round(4)"
         ),
         md(
-            "**⚠ Interpretation flag for the human.** The metric ranks *direct / "
+            "**Interpretation (confirmed).** The metric ranks *direct / "
             "counter-attacking* sides (Atlético, Sevilla, Sporting) **above** "
-            "possession Barcelona. This is internally consistent with the plan's "
-            "own definition ('higher = more direct progression'): Barcelona "
-            "completes a huge volume of recycling passes, inflating the "
-            "denominator, so its *per-pass* progression efficiency is lower. "
-            "However it runs **opposite** to the literal Phase 3 exit-criterion "
-            "wording ('attacking teams [Barcelona] show higher flow efficiency "
-            "than defensive teams [Atlético]'). I have **not** altered the metric "
-            "— this is a domain-knowledge call for you (see summary below)."
+            "possession Barcelona — and this is the **expected, correct** "
+            "behaviour. `attacking_flow_efficiency` measures progression "
+            "*directness per pass*: Barcelona completes a huge volume of "
+            "recycling passes (large denominator), so its per-pass forward "
+            "efficiency is lower, while direct sides convert a larger share of "
+            "their passes into def→att progression. Higher efficiency therefore "
+            "flags directness, not 'attacking quality' — possession teams are "
+            "expected to sit lower."
         ),
         md(
             "## 3.1.3 Tempo — touch durations (target: median 0.5–5.0s)"
@@ -145,15 +145,14 @@ def build():
             "## Summary for human approval\n\n"
             "1. **Resilience** ✅ — top critical players are midfielders / "
             "ball-playing defenders (Alves, Iniesta, Busquets for Barcelona).\n"
-            "2. **Max-flow efficiency** ⚠ — measures directness; **direct sides "
-            "rank above possession Barcelona**, which contradicts the literal "
-            "exit-criterion wording. Needs your decision.\n"
+            "2. **Max-flow efficiency** ✅ — measures progression directness; "
+            "direct / counter-attacking sides (Atlético, Sevilla) rank above "
+            "possession Barcelona, which is the expected and correct behaviour.\n"
             "3. **Tempo** ✅ — all medians within 0.5–5.0s.\n"
             "4. **Pressure** ✅ — completion clearly lower under pressure "
             "(pooled 81.9% → 73.5%).\n\n"
-            "**Human approval question:** Do these outputs align with your "
-            "football intuition — and how should we treat the flow-efficiency "
-            "directionality (#2)?"
+            "All four metric families behave as expected against football "
+            "intuition for La Liga 2015/16."
         ),
     ]
     return nb
