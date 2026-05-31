@@ -106,8 +106,11 @@ def build():
         ),
         md(
             "## fig_04 — Dynamic network metrics with detected shifts\n\n"
-            "Match 265839 (Barcelona), where all detected shifts were validated "
-            "against goals/substitutions (±3 min)."
+            "Match 265839 (Barcelona). Detected change-points are shown against "
+            "goals/substitutions; this is an illustrative, qualitative check on a "
+            "single match, not a benchmarked detector (most detected shifts land "
+            "near an event, but so would randomly placed ones — see the paper's "
+            "null-model caveat)."
         ),
         code(
             "barca_sevilla = load_pass_events(265839)\n"
@@ -127,11 +130,11 @@ def build():
         ),
         md(
             "## fig_04 — Team-level cluster scatter (PCA)\n\n"
-            "Teams coloured by their tactical cluster. **Villarreal** is annotated "
-            "as a mild outlier: their season network metrics (lower density, more "
-            "direct progression) placed them in the lower-table-direct cluster "
-            "**C2** despite a respectable league finish — flagged here for "
-            "transparency rather than hidden."
+            "Teams coloured by their tactical cluster. Cluster names in the legend "
+            "are derived from each cluster's own mean passing density (see "
+            "`viz.name_clusters_by_density`), so the labels stay correct even "
+            "though k-means cluster *integers* are arbitrary and reshuffle when "
+            "the data changes."
         ),
         code(
             "full = pd.read_parquet(os.path.abspath('../data/processed/feature_matrix.parquet'))\n"
@@ -140,8 +143,9 @@ def build():
             "viz.plot_cluster_scatter(team_feat, labels,\n"
             "    save_path=fp('fig_04_cluster_scatter.png'))\n"
             "plt.show()\n"
-            "print('Villarreal cluster:', labels['Villarreal'],\n"
-            "      '->', viz.CLUSTER_NAMES[labels['Villarreal']])"
+            "names, _ = viz.name_clusters_by_density(team_feat, labels.reindex(team_feat.index))\n"
+            "for c in sorted(set(int(x) for x in labels)):\n"
+            "    print(names[c] + ':', ', '.join(sorted(labels[labels==c].index)))"
         ),
         code(
             "import glob\n"

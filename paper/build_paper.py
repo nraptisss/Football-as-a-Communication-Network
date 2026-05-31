@@ -291,16 +291,21 @@ P("<b>Tempo (latency).</b> Treating each player as a processing node, we measure
   "and median touch time, a low-latency ratio (fraction of touches under two "
   "seconds), and a touch-weighted team tempo. <b>Pressing as interference.</b> "
   "We split a team's passes into under-pressure and pressure-free sub-networks "
-  "and compare their summaries, reporting the density degradation and the drop "
-  "in completion rate &mdash; the signal loss induced by opponent 'noise'.")
+  "and compare them, reporting the drop in completion rate &mdash; the signal "
+  "loss induced by opponent 'noise'. (We compare completion <i>rates</i> rather "
+  "than raw network density, which is not comparable between the small "
+  "under-pressure sample and the larger free one.)")
 
 H2("4.3&nbsp;&nbsp;Machine-learning models")
 P(
-    "For every match and team we assemble a feature vector of twelve numeric "
+    "For every match and team we assemble a feature vector of eleven numeric "
     "features: density, average clustering, the value of the top betweenness, "
     "eigenvector and PageRank nodes, node and edge counts, attacking flow "
-    "efficiency, team tempo, low-latency ratio, and the two pressure-degradation "
-    "measures. Crucially we store centrality <i>values</i>, not the player-name "
+    "efficiency, team tempo, low-latency ratio, and the under-pressure "
+    "completion-rate drop. (An earlier density-degradation feature was dropped: "
+    "the under-pressure sub-network is much smaller than the free one, so a raw "
+    "density difference mostly reflects sample size rather than a structural "
+    "pressing effect.) Crucially we store centrality <i>values</i>, not the player-name "
     "strings, so that the features are model-ready; names are kept only for "
     "display. Missing values (e.g. when a team has no under-pressure passes) are "
     "median-imputed. We then train three models with scikit-learn [18]. "
@@ -311,10 +316,13 @@ P(
     "result (win/draw/loss) from <b>first-half features only</b>, evaluated with "
     "stratified cross-validation; using only the first half makes the task "
     "harder and more interesting than using the whole match. <i>Tactical-shift "
-    "detection</i> z-scales the [density, top-betweenness, node-count] vector of "
-    "each dynamic window and flags timestamps where the cosine distance between "
-    "consecutive windows exceeds the mean plus a threshold times the standard "
-    "deviation.")
+    "detection</i> z-scales the [density, top-betweenness, average-clustering] "
+    "vector of each dynamic window and flags timestamps where the cosine distance "
+    "between consecutive windows exceeds the mean plus a threshold times the "
+    "standard deviation. The window's node count is deliberately excluded from "
+    "this vector: a substitution changes the roster and would make the node "
+    "count jump mechanically, so including it would let the detector trivially "
+    "rediscover the substitutions it is later validated against.")
 
 # ==========================================================================
 # 5 Results
@@ -381,32 +389,82 @@ figure(os.path.join(FIG, "fig_03_pressure_comparison.png"),
 
 H2("5.5&nbsp;&nbsp;Tactical clustering")
 c = R["clusters"]
+
+
+def _cluster_with(team_name):
+    """Return the sorted member list of whichever cluster contains team_name."""
+    for members in c.values():
+        if team_name in members:
+            return members
+    return []
+
+
+_poss = _cluster_with("Barcelona")
+_direct = _cluster_with("Atlético Madrid")
+_cq = R.get("clusters_quality", {})
+_sil = _cq.get("silhouette_by_k", {})
+_best_k = _cq.get("best_k_by_silhouette")
+_mid_sizes = sorted((len(v) for v in c.values()
+                     if v not in (_poss, _direct)), reverse=True)
+_mid_desc = (" of about {} teams each".format(" and ".join(str(s) for s in _mid_sizes))
+             if _mid_sizes else "")
 P("Clustering the season-average feature vector of each team into four groups "
-  "(Figure 7) produces tactically coherent tiers. Cluster&nbsp;0 isolates the "
-  "two possession giants ({c0}); cluster&nbsp;3 is a distinctive direct group "
-  "({c3}); the remaining clusters split the rest of the league into an organised "
-  "mid-table band and a lower-table direct band. Barcelona and Atl&eacute;tico "
-  "land in different clusters, as football intuition demands.".format(
-      c0=", ".join(c["0"]), c3=", ".join(c["3"])))
+  "(Figure 7) recovers the two tactical extremes cleanly: one cluster isolates "
+  "the possession giants ({c0}) and a separate, distinctive cluster holds the "
+  "direct pair {c3}. Barcelona and Atl&eacute;tico land in different clusters, "
+  "as football intuition demands. The middle of the league, however, does "
+  "<i>not</i> separate into sharp tiers: the remaining sides fall into two "
+  "middling groups{mid} that are only weakly distinguished from each other. The "
+  "robust, interpretable signal is therefore a possession&ndash;direct&ndash;"
+  "rest distinction rather than four strongly separated bands. (Cluster labels "
+  "are arbitrary k-means integers, so we describe clusters by membership rather "
+  "than index, and the figure legend names each cluster from its own mean "
+  "density.)".format(
+      c0=", ".join(_poss) or "Barcelona, Real Madrid",
+      c3=", ".join(_direct) or "Atlético Madrid, Rayo Vallecano",
+      mid=_mid_desc))
+if _sil and _best_k is not None:
+    P("This is borne out by a silhouette sweep, which favours k = {bk} "
+      "(silhouette {bs:.2f}) &mdash; the natural possession-versus-rest split "
+      "&mdash; over k = 4 ({s4:.2f}). With only twenty teams in an "
+      "eleven-dimensional feature space the four-way split is exploratory rather "
+      "than statistically clean, and should be read as such; we retain it in the "
+      "figure only because the two extreme clusters it surfaces are tactically "
+      "meaningful.".format(
+          bk=_best_k, bs=_sil.get(str(_best_k), _sil.get(_best_k, 0.0)),
+          s4=_sil.get("4", _sil.get(4, 0.0))))
 figure(os.path.join(FIG, "fig_04_cluster_scatter.png"),
        "Figure 7. Teams projected to two PCA dimensions and coloured by tactical "
-       "cluster. Villarreal (annotated) is a mild outlier &mdash; its network "
-       "metrics, not its league finish, place it in the lower-table-direct "
-       "cluster.")
+       "cluster (legend names each cluster by its own mean passing density). The "
+       "possession giants and the direct pair sit at opposite extremes; the bulk "
+       "of the league forms one loosely-separated central group.")
 
 H2("5.6&nbsp;&nbsp;Match-outcome prediction")
+_perm = R["outcome"].get("permutation", {})
+_rand = R["outcome"].get("random_baseline", 1 / 3)
 P("Predicting the full-time result from first-half network structure alone "
   "reaches {acc}% &plusmn; {sd}% cross-validated accuracy with a weighted F1 of "
-  "{f1}, against a {base}% majority-class baseline and a 33% random baseline "
-  "(Table 1). For a deliberately interpretable model fed only structural "
-  "first-half features, beating the majority baseline is a meaningful and "
-  "honest result. Feature importances are spread fairly evenly, led by average "
-  "clustering, attacking flow efficiency and team tempo &mdash; structure, "
-  "directness and speed &mdash; which is reassuringly sensible.".format(
+  "{f1}, against a {base}% majority-class baseline (the honest comparator) and a "
+  "{rand}% three-class random baseline (Table 1). The lift over the majority "
+  "baseline is only about {lift} points and the per-fold spread is {sd} points, "
+  "so this is a modest effect &mdash; but it is a <i>real</i> one: a "
+  "{nperm}-run label-permutation test, which destroys any genuine "
+  "feature&ndash;outcome relationship, never reaches the observed accuracy "
+  "(null mean {nmean}%, p &asymp; {p}). First-half structure therefore carries "
+  "genuine, if small, signal about the full-time result. Feature importances "
+  "are spread fairly evenly, led by average clustering, attacking flow "
+  "efficiency and team tempo &mdash; structure, directness and speed &mdash; "
+  "which is reassuringly sensible.".format(
       acc=int(R["outcome"]["cv_accuracy_mean"] * 100),
       sd=int(R["outcome"]["cv_accuracy_std"] * 100),
       f1=R["outcome"]["cv_f1_weighted"],
-      base=int(R["outcome"]["majority_baseline"] * 100)))
+      base=int(R["outcome"]["majority_baseline"] * 100),
+      rand=int(_rand * 100),
+      lift=int(round((R["outcome"]["cv_accuracy_mean"]
+                      - R["outcome"]["majority_baseline"]) * 100)),
+      nperm=_perm.get("n_permutations", 200),
+      nmean=int(_perm.get("null_mean", 0.0) * 100),
+      p=_perm.get("permutation_p", "n/a")))
 
 # Table 1: outcome metrics
 t1 = [["Metric", "Value"],
@@ -414,7 +472,8 @@ t1 = [["Metric", "Value"],
       ["Accuracy std. (folds)", "{:.1f}%".format(R["outcome"]["cv_accuracy_std"] * 100)],
       ["Weighted F1", "{:.3f}".format(R["outcome"]["cv_f1_weighted"])],
       ["Majority baseline", "{:.1f}%".format(R["outcome"]["majority_baseline"] * 100)],
-      ["Random baseline (3-class)", "33.3%"],
+      ["Random baseline (3-class)", "{:.1f}%".format(R["outcome"].get("random_baseline", 1/3) * 100)],
+      ["Permutation-test p", "{}".format(R["outcome"].get("permutation", {}).get("permutation_p", "n/a"))],
       ["Top features", "avg. clustering, flow efficiency, team tempo"]]
 tbl1 = Table(t1, colWidths=[180, 280], hAlign="CENTER")
 tbl1.setStyle(TableStyle([
@@ -435,12 +494,25 @@ story.append(KeepTogether([tbl1,
 
 H2("5.7&nbsp;&nbsp;Tactical-shift detection")
 sh = R["shifts"]
-P("On a manually inspected match (Barcelona vs Sevilla), all {m} of {t} detected "
+_shift_p = sh.get("permutation_p")
+_shift_extra = ""
+if _shift_p is not None:
+    _shift_extra = (
+        " This should be read against a null model rather than at face value: "
+        "with a &plusmn;3-minute tolerance and several reference events, a "
+        "randomly placed change-point already has a {hit}% chance of landing "
+        "near an event, and randomly placing the same number of change-points "
+        "matches at least as many events with p &asymp; {p}. The detector is "
+        "therefore an illustrative, qualitative tool, not a benchmarked "
+        "detector.".format(
+            hit=int(round((sh.get("null_match_prob_per_random_shift") or 0) * 100)),
+            p=_shift_p))
+P("On a manually inspected match (Barcelona vs Sevilla), {m} of {t} detected "
   "change-points fall within three minutes of a substitution or goal "
   "(Figure 8). Detection quality varies by match &mdash; an unsupervised "
   "detector also flags genuine phase changes that are not subs or goals &mdash; "
-  "which is why such validation is done on a human-chosen match.".format(
-      m=sh["matched"], t=sh["total"]))
+  "which is why this validation is done on a single human-chosen match.{extra}".format(
+      m=sh["matched"], t=sh["total"], extra=_shift_extra))
 figure(os.path.join(FIG, "fig_04_dynamic_metrics.png"),
        "Figure 8. Barcelona's network density and top betweenness over the match. "
        "Red dashed lines are automatically detected tactical shifts; grey dotted "

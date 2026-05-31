@@ -46,7 +46,6 @@ def team_metrics(pass_df: pd.DataFrame, team: str) -> dict:
         "team_tempo_seconds": round(team_tempo, 3),
         "team_low_latency_ratio": round(team_low_latency, 4),
         "completion_rate_drop_under_pressure": round(pressure["completion_rate_drop"], 4),
-        "density_degradation_under_pressure": round(pressure["density_degradation"], 4),
         "pressed_router": pressure["centrality_shift"]["pressed_top_betweenness"],
         "free_router": pressure["centrality_shift"]["free_top_betweenness"],
     }

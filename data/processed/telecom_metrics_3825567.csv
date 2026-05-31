@@ -1,3 +1,3 @@
-match_id,team,top_resilience_player,top_resilience_score,max_flow_value,min_cut_zones,attacking_flow_efficiency,team_tempo_seconds,team_low_latency_ratio,completion_rate_drop_under_pressure,density_degradation_under_pressure,pressed_router,free_router
-3825567,Sporting Gijón,Ignacio Cases Mora,1.0,12.0,x2y0|x2y1|x3y0|x3y1|x3y2|x4y0|x4y1|x4y2,0.055,2.878,0.4429,0.0104,0.2857,Carlos Carmona Bonet,Ignacio Cases Mora
-3825567,Real Madrid,Toni Kroos,0.6358,23.0,x0y0|x0y1|x0y2|x1y0|x1y1|x1y2|x2y0|x2y2|x3y0|x3y1,0.0396,4.008,0.2692,0.1306,0.467,Luka Modrić,Toni Kroos
+match_id,team,top_resilience_player,top_resilience_score,max_flow_value,min_cut_zones,attacking_flow_efficiency,team_tempo_seconds,team_low_latency_ratio,completion_rate_drop_under_pressure,pressed_router,free_router
+3825567,Sporting Gijón,Ignacio Cases Mora,1.0,12.0,x2y0|x2y1|x3y0|x3y1|x3y2|x4y0|x4y1|x4y2,0.055,2.878,0.4429,0.0104,Carlos Carmona Bonet,Ignacio Cases Mora
+3825567,Real Madrid,Toni Kroos,0.6358,23.0,x0y0|x0y1|x0y2|x1y0|x1y1|x1y2|x2y0|x2y2|x3y0|x3y1,0.0396,4.008,0.2692,0.1306,Luka Modrić,Toni Kroos

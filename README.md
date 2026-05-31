@@ -32,7 +32,9 @@ way, questions from communication engineering start to translate into football:
 ## Installation
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt          # flexible install
+# or, for the exact environment that produced the committed results/figures:
+pip install -r requirements-lock.txt     # pinned versions
 ```
 
 Python 3.10+; data comes from [StatsBomb Open Data](https://github.com/statsbomb/open-data)
@@ -71,11 +73,28 @@ Run the test suite with `pytest`.
 
 ## Key results (La Liga 2015/16)
 
-- Team-level clustering separates **possession elite** (Barcelona, Real Madrid)
-  from **distinctive/direct** sides (Atlético, Rayo) and the table's tiers.
-- Predicting full-match W/D/L from **first-half** network features alone reaches
-  ~44% cross-validated accuracy (33% baseline).
-- Detected tactical shifts line up with substitutions and goals (±3 min).
+- **Metrics match football intuition.** Resilience flags Barcelona's
+  midfield/ball-playing defenders (Busquets, Iniesta, Alves) as structurally
+  critical; completion drops ~8pp under pressure (81%→73%); and
+  attacking-flow-efficiency separates *directness* from *possession* (direct
+  sides score higher than Barcelona). These confirm known facts through a
+  communication-network lens rather than discovering new ones.
+- **Clustering** cleanly isolates the two possession giants (Barcelona, Real
+  Madrid) from the rest. Note the *strongest* silhouette is at **k=2** (that
+  possession-vs-rest split); the k=4 "tiers" are reported for tactical
+  granularity, not because four groups are statistically clean. Figure cluster
+  names are derived from each cluster's own density profile, not hardcoded.
+- **Outcome model (honest framing).** Predicting full-match W/D/L from
+  **first-half** network features alone reaches **~42% cross-validated accuracy
+  (±3pp across folds)** against a **38% majority-class baseline** (33% is the
+  3-class random baseline). The ~4pp lift is small but **statistically real**: a
+  200-run label-permutation test gives p≈0.01 (null mean ~37%). An honest
+  signal, not a strong predictor.
+- **Tactical-shift detection** is illustrative only. On the inspected match
+  3/4 detected change-points fall near a goal/substitution, but this is **not**
+  significant against a random-placement null (p≈0.17: a randomly placed
+  change-point already lands within ±3 min of an event ~39% of the time). Treat
+  it as a qualitative tool, not a benchmarked detector.
 
 ## Paper
 

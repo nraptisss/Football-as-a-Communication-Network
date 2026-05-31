@@ -42,7 +42,6 @@ FEATURE_COLUMNS = [
     "attacking_flow_efficiency",
     "team_tempo",
     "low_latency_ratio",
-    "density_degradation",
     "completion_rate_drop",
 ]
 TARGET_COLUMNS = ["goals_scored", "match_result"]
@@ -111,7 +110,6 @@ def compute_feature_row(pass_df: pd.DataFrame, team: str) -> dict:
         row["low_latency_ratio"] = np.nan
 
     degradation = telecom.compute_pressure_degradation(pass_df, team)
-    row["density_degradation"] = degradation["density_degradation"]
     row["completion_rate_drop"] = degradation["completion_rate_drop"]
     return row
 
@@ -303,10 +301,17 @@ def detect_tactical_shifts(
 ) -> list[float]:
     """Change-point detection on a dynamic passing-network time series.
 
-    For each window graph build the feature vector [density, top betweenness
-    value, n_nodes], z-scale across the series, take the cosine distance between
-    consecutive vectors, and flag timestamps where distance exceeds
-    mean + threshold * std. Returns the list of flagged window-start timestamps.
+    For each window graph build the structural feature vector [density, top
+    betweenness value, avg clustering], z-scale across the series, take the
+    cosine distance between consecutive vectors, and flag timestamps where
+    distance exceeds mean + threshold * std. Returns the flagged window-start
+    timestamps.
+
+    Note: the node count is deliberately NOT a feature. A substitution changes
+    the roster and makes the node count jump mechanically, so including it would
+    let the detector "discover" substitutions it is later validated against - a
+    circular evaluation. The three retained features describe the shape of the
+    passing structure, not who is on the pitch.
     """
     if len(dynamic_networks) < 3:
         return []
@@ -318,7 +323,8 @@ def detect_tactical_shifts(
         else:
             top_betw = 0.0
         timestamps.append(float(ts))
-        vectors.append([nx.density(G), top_betw, float(G.number_of_nodes())])
+        vectors.append([nx.density(G), top_betw,
+                        nx.average_clustering(G) if G.number_of_nodes() else 0.0])
 
     X = np.asarray(vectors, dtype=float)
     # z-scale each feature so no single scale (e.g. n_nodes) dominates cosine.
