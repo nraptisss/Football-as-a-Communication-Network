@@ -174,7 +174,11 @@ def network_summary(G: nx.DiGraph) -> dict:
     """Return standard graph metrics for a passing network.
 
     Keys: density, avg_clustering, n_nodes, n_edges,
-          top_betweenness_node, top_eigenvector_node.
+          top_betweenness_node, top_eigenvector_node, top_pagerank_node.
+
+    Three complementary "key player" views are reported because each captures a
+    different tactical role: betweenness = bridging/router, eigenvector = hub
+    among hubs, PageRank = receives volume from influential team-mates.
     """
     n_nodes = G.number_of_nodes()
     n_edges = G.number_of_edges()
@@ -186,6 +190,7 @@ def network_summary(G: nx.DiGraph) -> dict:
         "n_edges": n_edges,
         "top_betweenness_node": None,
         "top_eigenvector_node": None,
+        "top_pagerank_node": None,
     }
     if n_nodes == 0:
         return summary
@@ -203,6 +208,10 @@ def network_summary(G: nx.DiGraph) -> dict:
     # component. Falls back to None if neither converges.
     if n_edges > 0:
         summary["top_eigenvector_node"] = _top_eigenvector_node(G)
+        # Weighted PageRank: robust on directed/disconnected graphs; rewards
+        # players who receive many passes from otherwise well-connected players.
+        pagerank = nx.pagerank(G, weight="weight")
+        summary["top_pagerank_node"] = max(pagerank, key=pagerank.get)
     return summary
 
 

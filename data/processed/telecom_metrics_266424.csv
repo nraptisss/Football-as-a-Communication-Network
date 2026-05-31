@@ -1,0 +1,3 @@
+match_id,team,top_resilience_player,top_resilience_score,max_flow_value,min_cut_zones,attacking_flow_efficiency,team_tempo_seconds,team_low_latency_ratio,completion_rate_drop_under_pressure,density_degradation_under_pressure,pressed_router,free_router
+266424,Barcelona,Daniel Alves da Silva,0.6997,17.0,x2y0|x2y1|x2y2|x3y0|x3y1|x3y2|x4y0|x4y1|x4y2,0.0288,2.956,0.4308,0.1802,0.456,Daniel Alves da Silva,Gerard Piqué Bernabéu
+266424,Real Madrid,Toni Kroos,0.75,21.0,x1y0|x2y1|x2y2|x3y0|x3y1|x3y2|x4y0|x4y1|x4y2,0.0548,3.524,0.3435,0.0624,0.4936,Luka Modrić,Luka Modrić

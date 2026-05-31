@@ -12,7 +12,12 @@
       "Bash(python scripts/build_notebook_02.py)",
       "Bash(rm -f figures/_phase2_check_barca.png)",
       "Bash(python -m pytest -q)",
-      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 2 — passing network construction *)"
+      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 2 — passing network construction *)",
+      "Bash(python -m pytest tests/test_telecom.py tests/test_network.py -q)",
+      "Bash(python scripts/build_telecom_metrics.py)",
+      "Bash(python scripts/build_notebook_03.py)",
+      "Bash(grep -vE \"credentials|NoAuthWarning|version 1.1.0|behave|playing|warnings.warn|Docs:|warnings summary|test_only_pass|^$|^--\")",
+      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 3 — telecom-theory metrics *)"
     ]
   }
 }

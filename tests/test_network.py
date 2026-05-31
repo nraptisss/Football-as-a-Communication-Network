@@ -21,7 +21,7 @@ from tactical_topology.network import (
 MATCH_ID = config.GROUND_TRUTH_MATCH_IDS[0]
 REQUIRED_SUMMARY_KEYS = {
     "density", "avg_clustering", "n_nodes", "n_edges",
-    "top_betweenness_node", "top_eigenvector_node",
+    "top_betweenness_node", "top_eigenvector_node", "top_pagerank_node",
 }
 
 

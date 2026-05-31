@@ -1,0 +1,3 @@
+match_id,team,top_resilience_player,top_resilience_score,max_flow_value,min_cut_zones,attacking_flow_efficiency,team_tempo_seconds,team_low_latency_ratio,completion_rate_drop_under_pressure,density_degradation_under_pressure,pressed_router,free_router
+3825563,Las Palmas,Pedro Bigas Rigo,0.8937,6.0,x1y0|x2y0|x3y0|x4y0|x4y1|x4y2,0.0187,3.843,0.2542,0.0919,0.3077,Antolín Alcáraz Viveros,Pedro Bigas Rigo
+3825563,Atlético Madrid,Gabriel Fernández Arenas,0.75,13.0,x0y0|x0y1|x0y2|x1y0|x1y1|x1y2|x2y0|x2y2|x3y1|x3y2,0.0237,3.674,0.3559,0.0947,0.3901,Gabriel Fernández Arenas,Gabriel Fernández Arenas
