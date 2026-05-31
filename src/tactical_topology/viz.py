@@ -199,17 +199,19 @@ def plot_zone_flow_heatmap(zone_graph, save_path: str | None = None,
     except ValueError:
         min_cut = set()
 
-    pitch = Pitch(pitch_type="statsbomb", pitch_color="white", line_color="#333333",
-                  linewidth=1.2)
     standalone = ax is None
     if standalone:
+        # Let mplsoccer own figure creation so it controls the (landscape) aspect.
+        pitch = Pitch(pitch_type="statsbomb", pitch_color="white",
+                      line_color="#333333", linewidth=1.2)
         fig, ax = pitch.draw(figsize=(12, 8))
     else:
+        # Caller already drew the pitch on this axis (e.g. via pitch.draw(ncols=2)).
         fig = ax.figure
-        pitch.draw(ax=ax)
 
+    # aspect='equal' preserves the true 120x80 pitch proportions (no stretching).
     ax.imshow(grid, extent=[0, config.PITCH_LENGTH, 0, config.PITCH_WIDTH],
-              origin="lower", aspect="auto", cmap="YlOrRd", alpha=0.75, zorder=0)
+              origin="lower", aspect="equal", cmap="YlOrRd", alpha=0.75, zorder=0)
 
     dx = config.PITCH_LENGTH / nx_x
     dy = config.PITCH_WIDTH / nx_y
