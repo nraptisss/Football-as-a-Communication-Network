@@ -7,7 +7,12 @@
       "Bash(python scripts/build_notebook_01.py)",
       "Bash(python -m pytest tests/test_loader.py -q -W error::FutureWarning)",
       "Bash(git add *)",
-      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 1 — data loader and cleaning *)"
+      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 1 — data loader and cleaning *)",
+      "Bash(python -m pytest tests/test_network.py -q)",
+      "Bash(python scripts/build_notebook_02.py)",
+      "Bash(rm -f figures/_phase2_check_barca.png)",
+      "Bash(python -m pytest -q)",
+      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 2 — passing network construction *)"
     ]
   }
 }
