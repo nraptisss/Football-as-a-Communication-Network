@@ -3,68 +3,89 @@
   "n_matches": 380,
   "n_teams": 20,
   "outcome": {
-    "cv_accuracy_mean": 0.438,
-    "cv_accuracy_std": 0.042,
-    "cv_f1_weighted": 0.413,
+    "cv_accuracy_mean": 0.421,
+    "cv_accuracy_std": 0.034,
+    "cv_f1_weighted": 0.395,
     "n_splits": 5,
+    "n_features": 11,
     "majority_baseline": 0.379,
+    "random_baseline": 0.333,
     "top_features": [
       {
-        "feature": "avg_clustering",
-        "importance": 0.102
-      },
-      {
-        "feature": "attacking_flow_efficiency",
-        "importance": 0.099
-      },
-      {
-        "feature": "team_tempo",
-        "importance": 0.098
+        "feature": "completion_rate_drop",
+        "importance": 0.11
       },
       {
         "feature": "low_latency_ratio",
-        "importance": 0.097
+        "importance": 0.109
+      },
+      {
+        "feature": "avg_clustering",
+        "importance": 0.108
       },
       {
         "feature": "top_betweenness_value",
-        "importance": 0.096
+        "importance": 0.108
+      },
+      {
+        "feature": "attacking_flow_efficiency",
+        "importance": 0.105
       }
     ],
     "result_distribution": {
       "L": 288,
       "W": 288,
       "D": 184
+    },
+    "permutation": {
+      "n_permutations": 200,
+      "null_mean": 0.365,
+      "null_std": 0.02,
+      "null_p95": 0.396,
+      "permutation_p": 0.01
     }
   },
   "clusters": {
     "0": [
-      "Barcelona",
-      "Real Madrid"
+      "Atlético Madrid",
+      "Rayo Vallecano"
     ],
     "1": [
       "Athletic Club",
       "Celta Vigo",
       "Las Palmas",
+      "Levante UD",
       "RC Deportivo La Coruña",
       "Real Sociedad",
       "Sevilla",
       "Valencia"
     ],
     "2": [
+      "Barcelona",
+      "Real Madrid"
+    ],
+    "3": [
       "Eibar",
       "Espanyol",
       "Getafe",
       "Granada",
-      "Levante UD",
       "Málaga",
       "Real Betis",
       "Sporting Gijón",
       "Villarreal"
-    ],
-    "3": [
-      "Atlético Madrid",
-      "Rayo Vallecano"
     ]
+  },
+  "clusters_quality": {
+    "silhouette_by_k": {
+      "2": 0.447,
+      "3": 0.193,
+      "4": 0.201,
+      "5": 0.139,
+      "6": 0.183
+    },
+    "best_k_by_silhouette": 2,
+    "reported_k": 4,
+    "note": "k=4 is reported for tactical granularity; the strongest silhouette is at k=2 (0.447), the natural possession-vs-rest split."
   },
   "pressure": {
     "free_completion": 0.819,
@@ -104,10 +125,10 @@
     "match": 265839,
     "team": "Barcelona",
     "detected": [
-      1021,
+      601,
       1081,
-      3301,
-      3781
+      2701,
+      3301
     ],
     "events": [
       1158,
@@ -117,7 +138,10 @@
       3804,
       4473
     ],
-    "matched": 4,
-    "total": 4
+    "matched": 3,
+    "total": 4,
+    "tolerance_seconds": 180,
+    "null_match_prob_per_random_shift": 0.386,
+    "permutation_p": 0.1738
   }
 }

@@ -373,9 +373,15 @@ def compute_pressure_degradation(pass_df: pd.DataFrame, team: str) -> dict:
 
     Returns:
         free_network, pressed_network  - network_summary dicts
-        density_degradation            - free density - pressed density
         completion_rate_drop           - free completion - pressed completion
         centrality_shift               - top betweenness node free vs pressed
+
+    Note: a raw ``density_degradation`` (free density - pressed density) was
+    intentionally removed. The under-pressure sub-network almost always has far
+    fewer passes than the free one, and graph density is not comparable between
+    samples of very different size, so that difference largely reflected sample
+    size rather than a structural pressing effect. ``completion_rate_drop`` is a
+    sound, sample-size-robust rate comparison and is retained.
     """
     _require_columns(
         pass_df,
@@ -401,7 +407,6 @@ def compute_pressure_degradation(pass_df: pd.DataFrame, team: str) -> dict:
     return {
         "free_network": free_summary,
         "pressed_network": pressed_summary,
-        "density_degradation": free_summary["density"] - pressed_summary["density"],
         "completion_rate_drop": free_completion - pressed_completion,
         "centrality_shift": {
             "free_top_betweenness": free_summary["top_betweenness_node"],

@@ -1,0 +1,20 @@
+# Exact, pinned versions for literal reproducibility: the environment in which
+# the committed results.json, feature matrices and figures were produced.
+#   pip install -r requirements-lock.txt
+# For a flexible install (latest compatible), use requirements.txt instead.
+statsbombpy==1.16.0
+pandas==2.3.3
+numpy==2.3.5
+networkx==3.5
+scikit-learn==1.7.2
+matplotlib==3.10.7
+mplsoccer==1.6.1
+plotly==6.5.0
+scipy==1.15.3
+jupyter==1.1.1
+ipykernel==7.1.0
+tqdm==4.67.1
+pyarrow==21.0.0
+pytest==9.0.3
+reportlab==4.5.1
+pillow==11.3.0

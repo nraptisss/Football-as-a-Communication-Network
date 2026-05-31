@@ -1,3 +1,6 @@
+# Flexible lower bounds for a normal install. For an EXACT, reproducible
+# environment (the one that produced the committed results/figures), use
+# requirements-lock.txt instead (pinned ==).
 statsbombpy>=1.0.3
 pandas>=2.0.0
 numpy>=1.26.0

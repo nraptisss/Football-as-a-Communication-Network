@@ -32,16 +32,47 @@ GREY = "#cccccc"
 
 plt.rcParams.update({"font.size": 11, "axes.titlesize": 13})
 
-# Tactical interpretation of the 4 KMeans clusters (team-level).
-CLUSTER_NAMES = {
-    0: "C0 Possession elite",
-    1: "C1 Organised mid-table",
-    2: "C2 Lower-table direct",
-    3: "C3 Distinctive/direct",
-}
-_CLUSTER_COLORS = {0: BLUE, 1: "#2a9d8f", 2: "#e9c46a", 3: RED}
+# Cluster names are derived from each cluster's own feature profile at plot time
+# (see ``name_clusters_by_density``), NOT hardcoded by integer label. KMeans
+# label integers are arbitrary and reshuffle whenever the data or seed changes,
+# so a fixed {0: "Possession elite", ...} map silently mislabels the figure as
+# soon as anything upstream changes. Naming by mean density keeps the legend
+# correct by construction.
+_TIER_COLORS = [BLUE, "#2a9d8f", "#e9c46a", RED, "#9b5de5", "#8d99ae"]
 _SCATTER_ANNOTATE = ["Barcelona", "Real Madrid", "Atlético Madrid",
                      "Rayo Vallecano", "Villarreal"]
+
+
+def name_clusters_by_density(team_features, labels):
+    """Map each cluster id to a content-derived name and a stable colour.
+
+    Clusters are ranked by their mean network ``density`` (a possession proxy):
+    the densest is named 'possession-dominant', the sparsest 'direct /
+    low-possession', the rest 'mid-block'. The name embeds the cluster's actual
+    mean density so the legend is self-describing and cannot drift from the data.
+    Returns ``(names, colors)`` dicts keyed by integer cluster id.
+
+    ``team_features`` is the team-indexed feature frame; ``labels`` is an array
+    aligned to ``team_features`` rows.
+    """
+    import pandas as pd
+
+    df = pd.DataFrame({"density": team_features["density"].to_numpy(),
+                       "c": np.asarray(labels)})
+    centroid_density = df.groupby("c")["density"].mean()
+    order = centroid_density.sort_values(ascending=False).index.tolist()
+    n = len(order)
+    names, colors = {}, {}
+    for rank, c in enumerate(order):
+        if rank == 0:
+            tag = "possession-dominant"
+        elif rank == n - 1:
+            tag = "direct / low-possession"
+        else:
+            tag = "mid-block"
+        names[int(c)] = f"C{int(c)}: {tag} (mean density {centroid_density[c]:.2f})"
+        colors[int(c)] = _TIER_COLORS[rank % len(_TIER_COLORS)]
+    return names, colors
 
 
 def _save(fig, save_path: str | None) -> None:
@@ -342,13 +373,16 @@ def plot_cluster_scatter(feature_matrix, cluster_labels, save_path: str | None =
     coords = PCA(n_components=2, random_state=42).fit_transform(fm[FEATURE_COLUMNS])
     annotate_teams = annotate_teams or _SCATTER_ANNOTATE
 
-    fig, ax = plt.subplots(figsize=(12, 8))
     labels_arr = np.asarray(labels)
+    # Names/colours derived from each cluster's own density profile (not hardcoded).
+    names, colors = name_clusters_by_density(fm, labels_arr)
+
+    fig, ax = plt.subplots(figsize=(12, 8))
     for c in sorted(set(int(x) for x in labels_arr)):
         mask = labels_arr == c
         ax.scatter(coords[mask, 0], coords[mask, 1], s=120,
-                   color=_CLUSTER_COLORS.get(c, GREY),
-                   label=CLUSTER_NAMES.get(c, f"C{c}"),
+                   color=colors.get(c, GREY),
+                   label=names.get(c, f"C{c}"),
                    edgecolors="black", linewidth=0.5, alpha=0.85)
 
     teams = list(fm.index)

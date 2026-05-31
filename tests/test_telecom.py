@@ -103,5 +103,6 @@ def test_pressure_degradation_returns_both_subnetworks(pass_df, team) -> None:
     deg = T.compute_pressure_degradation(pass_df, team)
     assert "free_network" in deg and "pressed_network" in deg
     assert "completion_rate_drop" in deg
-    assert "density_degradation" in deg
     assert "centrality_shift" in deg
+    # density_degradation was removed (sample-size confounded); ensure it is gone.
+    assert "density_degradation" not in deg
