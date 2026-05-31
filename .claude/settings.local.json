@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python -m pytest tests/test_loader.py -q)",
+      "Bash(python scripts/build_ground_truth.py)",
+      "Bash(python scripts/build_notebook_01.py)",
+      "Bash(python -m pytest tests/test_loader.py -q -W error::FutureWarning)",
+      "Bash(git add *)",
+      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 1 — data loader and cleaning *)"
+    ]
+  }
+}
