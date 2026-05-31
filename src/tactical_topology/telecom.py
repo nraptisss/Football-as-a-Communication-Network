@@ -237,10 +237,15 @@ def compute_max_flow(zone_graph) -> dict:
     _, (reachable, non_reachable) = nx.minimum_cut(
         H, _SUPER_SOURCE, _SUPER_SINK, capacity="capacity"
     )
+    cut_edges = _cut_edges(H, reachable, non_reachable)
     # Bottleneck = real zones on either side of a saturated cut edge.
     min_cut_zones = sorted({
-        z for u, v in _cut_edges(H, reachable, non_reachable)
-        for z in (u, v) if not z.startswith("__")
+        z for u, v in cut_edges for z in (u, v) if not z.startswith("__")
+    })
+    # Tighter, more interpretable: the source-side zones the ball must funnel
+    # out of (the last zones before the cut) - a clean band for visualisation.
+    min_cut_source_frontier = sorted({
+        u for u, v in cut_edges if not u.startswith("__") and not v.startswith("__")
     })
 
     # Strip super-nodes from the reported flow dict.
@@ -251,6 +256,7 @@ def compute_max_flow(zone_graph) -> dict:
     return {
         "max_flow_value": float(flow_value),
         "min_cut_zones": min_cut_zones,
+        "min_cut_source_frontier": min_cut_source_frontier,
         "flow_dict": clean_flow,
     }
 

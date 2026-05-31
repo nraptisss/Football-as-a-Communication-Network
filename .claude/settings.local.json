@@ -24,7 +24,9 @@
       "Bash(python scripts/build_feature_matrix.py)",
       "Bash(python scripts/build_notebook_04.py)",
       "Bash(grep -vE \"credentials|NoAuthWarning|version 1.1.0|behave|playing|warnings.warn|Docs:|warnings summary|^$|^--|::\")",
-      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 4 — ML models \\(clustering, outcome, shift detection\\) *)"
+      "Bash(git -c core.autocrlf=false commit -q -m 'feat: phase 4 — ML models \\(clustering, outcome, shift detection\\) *)",
+      "Bash(python scripts/build_notebook_05.py)",
+      "Bash(python -m pytest tests/test_telecom.py -q)"
     ]
   }
 }
