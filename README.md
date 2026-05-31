@@ -93,5 +93,4 @@ _Write-up to be linked here after publication._
 }
 ```
 
-Built on [StatsBomb Open Data](https://github.com/statsbomb/open-data). See
-[PLAN_1.md](PLAN_1.md) for the full phased implementation plan.
+Built on [StatsBomb Open Data](https://github.com/statsbomb/open-data).
