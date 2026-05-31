@@ -1,7 +1,7 @@
 # Tactical Topology: Football as a Communication Network
-## Implementation Plan for Claude Code
+## Implementation Plan
 
-> **Purpose:** This document guides Claude Code through a phased implementation of a
+> **Purpose:** This document guides a phased implementation of a
 > football network analysis project. Each phase has explicit success criteria that
 > **must be verified before proceeding**. Do not carry assumptions or unverified
 > outputs from one phase into the next.
@@ -42,7 +42,7 @@ ML models and clean visualisations.
 - Pre-trained models (all trained from scratch in the project)
 
 ### Your Role During Implementation
-Claude Code will generate all code. Your role in each phase is to:
+All code is generated programmatically. Your role in each phase is to:
 1. Run the phase's validation script and confirm outputs match expected results
 2. Approve or flag any domain-knowledge decisions (e.g. "does this metric make
    tactical sense?") — your football knowledge is critical here
@@ -745,7 +745,7 @@ def plot_cluster_scatter(
 
 ---
 
-## 🔁 Cross-Phase Rules for Claude Code
+## 🔁 Cross-Phase Rules
 
 These apply throughout all phases:
 

@@ -1,5 +1,9 @@
 # Tactical Topology: Football as a Communication Network
 
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+[![Code style: data](https://img.shields.io/badge/data-StatsBomb%20Open%20Data-e63946.svg)](https://github.com/statsbomb/open-data)
+
 Analyse football team tactical structure by treating a team's passing as a
 **communication network** — applying ideas from telecoms and graph theory
 (fault-tolerance, max-flow/min-cut, processing latency, signal interference) to
@@ -80,11 +84,12 @@ _Write-up to be linked here after publication._
 ## Citation
 
 ```bibtex
-@software{tactical_topology,
+@software{raptis_tactical_topology,
+  author = {Raptis, Nikos},
   title  = {Tactical Topology: Football as a Communication Network},
   year   = {2026},
   note   = {Analysis of StatsBomb open data using communication-network theory},
-  url    = {https://github.com/<your-username>/tactical-topology}
+  url    = {https://github.com/nraptisss/Football-as-a-Communication-Network}
 }
 ```
 

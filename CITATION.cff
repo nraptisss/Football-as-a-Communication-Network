@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Tactical Topology: Football as a Communication Network"
+abstract: >-
+  Analysis of football team tactical structure using communication-network
+  theory (graph resilience, max-flow/min-cut, latency/tempo, pressing as
+  interference) on StatsBomb open data, with interpretable ML models and
+  publication-quality visualisations.
+type: software
+authors:
+  - family-names: Raptis
+    given-names: Nikos
+repository-code: "https://github.com/nraptisss/Football-as-a-Communication-Network"
+license: Apache-2.0
+keywords:
+  - football analytics
+  - network science
+  - graph theory
+  - statsbomb
+  - machine learning
+date-released: "2026-05-31"

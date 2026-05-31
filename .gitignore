@@ -21,3 +21,8 @@ env/
 .DS_Store
 .vscode/
 .idea/
+
+# pytest / coverage caches
+.pytest_cache/
+.coverage
+htmlcov/
